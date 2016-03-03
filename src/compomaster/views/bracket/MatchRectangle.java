@@ -42,7 +42,7 @@ public class MatchRectangle extends StackPane {
     /**
      * constructor
      */
-    public MatchRectangle(Font font) {
+    public MatchRectangle() {
         this.team1  = null;
         this.team2  = null;
     }

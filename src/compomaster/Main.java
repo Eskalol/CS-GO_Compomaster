@@ -1,6 +1,7 @@
 package compomaster;
 
 import compomaster.models.teams.Team;
+import compomaster.views.bracket.Bracket;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -39,14 +40,16 @@ public class Main extends Application implements MainWindow {
 
         this.primaryStage.setTitle(this.windowTitle);
         this.primaryStage.setScene(this.primaryScene);
-        this.primaryStage.setResizable(false);
+        this.primaryStage.setResizable(true);
         this.primaryStage.show();
 
         //Testing
-        MatchRectangle lol = new MatchRectangle(new Team("Team Dopapir"), new Team("Team Dass"));
-        lol.load();
-        lol.updateText();
-        this.addNodeToRootPane(lol);
+        //MatchRectangle lol = new MatchRectangle(new Team("Team Dopapir"), new Team("Team Dass"));
+        //lol.load();
+        //lol.updateText();
+        Bracket b = new Bracket(2);
+        b.load();
+        this.addNodeToRootPane(b);
     }
 
     /**
