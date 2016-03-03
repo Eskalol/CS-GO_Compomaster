@@ -53,7 +53,7 @@ public class MatchRectangle extends StackPane {
         font        = Resources.getCsgoFont(18);
 
         //background for team 1
-        teamBg1     = new Rectangle(170, 35);
+        teamBg1     = new Rectangle(165, 35);
         teamBg1.setFill(Color.web("fe721d"));
         teamBg1.setOpacity(0.7);
         teamBg1.setArcHeight(10);
@@ -75,7 +75,7 @@ public class MatchRectangle extends StackPane {
         team1WinAmount.setFont(font);
 
         //background for team 2
-        teamBg2     = new Rectangle(170, 35);
+        teamBg2     = new Rectangle(165, 35);
         teamBg2.setTranslateY(35);
         teamBg2.setFill(Color.web("f8f8f8"));
         teamBg2.setOpacity(0.7);
@@ -108,8 +108,8 @@ public class MatchRectangle extends StackPane {
      *
      */
     public void updateText() {
-        String tName1 = (team1 == null) ? "n/a" : team1.getTeamName();
-        String tName2 = (team2 == null) ? "n/a" : team2.getTeamName();
+        String tName1 = (team1 == null) ? "TBA" : team1.getTeamName();
+        String tName2 = (team2 == null) ? "TBA" : team2.getTeamName();
 
         teamName1.setText(tName1);
         teamName2.setText(tName2);
