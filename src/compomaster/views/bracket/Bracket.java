@@ -18,8 +18,8 @@ public class Bracket extends StackPane {
     private final int offsetY   = 100;
     private final int offsetX   = 300;
 
-    private int lineThinckness = 5;
-
+    private int     lineThinckness = 5;
+    private boolean looserBracket;
 
     private int bracketSize;
 
@@ -30,12 +30,22 @@ public class Bracket extends StackPane {
     /**
      * constructor
      *
-     * @param bracketSize number of 2^n teams in bracket
+     * @param bracketSize number of 2^n matches in round 1
      */
     public Bracket(int bracketSize) {
         this.bracketSize = bracketSize;
+        this.looserBracket = false;
     }
 
+    /**
+     * optional constructor for brakcet
+     * @param bracketSize number of 2^n matches in round 1
+     * @param looserBracket looserbracket
+     */
+    public Bracket(int bracketSize, boolean looserBracket) {
+        this.bracketSize = bracketSize;
+        this.looserBracket = looserBracket;
+    }
 
     /**
      * load method for Bracket
@@ -44,6 +54,7 @@ public class Bracket extends StackPane {
         loadWinnersBracket();
         loadZoom();
         loadDrag();
+        loadLoosersBracket();
     }
 
 
@@ -103,8 +114,9 @@ public class Bracket extends StackPane {
                 i = -1;
                 //calc next y positon for first match in round
                 nextPosY =  (offsetY/2)+offsetY*((int)Math.pow(2, (bracketSize - bsize))-1);
+                //calc next x position
+                nextPosX += (this.looserBracket && bsize < bracketSize ? offsetX*2 : offsetX);
                 bsize--;
-                nextPosX += offsetX;
             }
         }
     }
@@ -136,8 +148,11 @@ public class Bracket extends StackPane {
      * @param depth round/depth of tree
      */
     private void addHandVLinesWinner(int x, int y, int match, int depth) {
-        Line l1 = getHorizontalLine(50);
-        l1.setTranslateX(x+145);
+        //calc length of horizontal line
+        int horLen = (this.looserBracket && depth > 0 ? offsetX/2+50 : 50);
+        int xOff = (this.looserBracket && depth > 0 ? 220 : 145);
+        Line l1 = getHorizontalLine(horLen);
+        l1.setTranslateX(x+xOff);
         l1.setTranslateY(y+12+lineThinckness);
         this.getChildren().add(l1);
 
@@ -145,18 +160,42 @@ public class Bracket extends StackPane {
             int vLineLen = ( depth == 0 ? offsetY : offsetY*((int)Math.pow(2, depth)) );
             int yPos = ( depth == 0 ? y+62 : y+(offsetY/2)+offsetY*((int)Math.pow(2, depth)-1)-vLineLen/2+62 )+lineThinckness;
             Line l2 = getVerticalLine(vLineLen);
-            l2.setTranslateX(x+170);
+            l2.setTranslateX(x+xOff+horLen/2);
             l2.setTranslateY(yPos);
             this.getChildren().add(l2);
 
-            int horX = 46;
+            int horX = horLen-4;
             Line l3 = getHorizontalLine(horX);
-            l3.setTranslateX(x+170+horX/2);
+            l3.setTranslateX(x+xOff+horLen/2+horX/2);
             l3.setTranslateY(yPos);
             this.getChildren().add(l3);
         }
     }
 
+
+    /**
+     * method loads loosersbracket
+     */
+    private void loadLoosersBracket() {
+        if(!this.looserBracket) return;
+        int yStep = offsetY*((int)Math.pow(2, bracketSize)) + offsetY;
+        int nextPosX = offsetX;
+        int nextPosY = yStep;
+        int bsize = bracketSize-1;
+        for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
+            addMatchRectangle(nextPosX, nextPosY);
+            addMatchRectangle(nextPosX+offsetX, nextPosY);
+            nextPosY += ( bsize == bracketSize-1 ? offsetY : offsetY*((int)Math.pow(2, (bracketSize - bsize-1))) );
+            if( (i + 1) == (int)Math.pow(2, bsize) ) {
+                i = -1;
+                //calc next y positon for first match in round
+                nextPosY =  (offsetY/2)+offsetY*((int)Math.pow(2, (bracketSize - bsize-1))-1)+yStep;
+                bsize--;
+                nextPosX += offsetX*2;
+            }
+        }
+
+    }
 
     /**
      * method return horizontal line with given length

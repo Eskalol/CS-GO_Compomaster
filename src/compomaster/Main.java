@@ -47,7 +47,7 @@ public class Main extends Application implements MainWindow {
         //MatchRectangle lol = new MatchRectangle(new Team("Team Dopapir"), new Team("Team Dass"));
         //lol.load();
         //lol.updateText();
-        Bracket b = new Bracket(4);
+        Bracket b = new Bracket(3, true);
         b.load();
         b.setTranslateX(-1280/2);
         b.setTranslateY(-720/2);
