@@ -12,22 +12,27 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.HashMap;
+
 /**
  * Created by Eska on 03.03.2016.
+ * This class is a view bracket generator
  */
 public class Bracket extends StackPane {
-    private Font font;
+    private Font        font;
 
-    private final int offsetY   = 100;
-    private final int offsetX   = 300;
+    private final int   offsetY          = 100;
+    private final int   offsetX          = 300;
 
-    private int     lineThinckness = 5;
-    private boolean looserBracket;
+    private int         lineThinckness   = 5;
+    private boolean     looserBracket;
 
-    private int bracketSize;
+    private int         bracketSize;
 
-    private double deltaX;
-    private double deltaY;
+    private double      deltaX;
+    private double      deltaY;
+
+    private HashMap<String, MatchRectangle> matches;
 
     /**
      * constructor
@@ -35,21 +40,23 @@ public class Bracket extends StackPane {
      * @param bracketSize number of 2^n matches in round 1
      */
     public Bracket(int bracketSize) {
-        this.bracketSize = bracketSize;
-        this.looserBracket = false;
-        this.font = Resources.getCsgoFont(30);
+        this.bracketSize    = bracketSize;
+        this.looserBracket  = false;
+        this.font           = Resources.getCsgoFont(30);
+        this.matches        = new HashMap<>();
     }
 
 
     /**
-     * optional constructor for brakcet
+     * optional constructor for bracket
      * @param bracketSize number of 2^n matches in round 1
      * @param looserBracket looserbracket
      */
     public Bracket(int bracketSize, boolean looserBracket) {
-        this.bracketSize = bracketSize;
-        this.looserBracket = looserBracket;
-        this.font = Resources.getCsgoFont(30);
+        this.bracketSize    = bracketSize;
+        this.looserBracket  = looserBracket;
+        this.font           = Resources.getCsgoFont(30);
+        this.matches        = new HashMap<>();
     }
 
 
@@ -63,6 +70,16 @@ public class Bracket extends StackPane {
         loadWinnersBracket();
         loadLoosersBracket();
         joinWinnerAndLooserBracket();
+    }
+
+
+    /**
+     * returns a view of a match
+     * @param key key for match
+     * @return MatchRectangle
+     */
+    public MatchRectangle getMatch(String key) {
+        return matches.get(key);
     }
 
 
@@ -114,11 +131,12 @@ public class Bracket extends StackPane {
         int nextPosX = 0;
         int nextPosY = 0;
         int bsize = bracketSize;
+        int matchCnt = 0;
 
         for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
             if(bsize > 0)
                 addHandVLinesWinner(nextPosX, nextPosY, i, (bracketSize - bsize));
-            addMatchRectangle(nextPosX, nextPosY);
+            addMatchRectangle(nextPosX, nextPosY, "wb"+(++matchCnt));
             nextPosY += ( bsize == bracketSize ? offsetY : offsetY*((int)Math.pow(2, (bracketSize - bsize))) );
             if( (i + 1) == (int)Math.pow(2, bsize) ) {
                 i = -1;
@@ -130,6 +148,13 @@ public class Bracket extends StackPane {
                 bsize--;
             }
         }
+
+        //fix grand final in hashmap
+        if(!this.looserBracket) {
+            MatchRectangle gf = matches.get("wb"+matchCnt);
+            matches.remove("wb"+matchCnt);
+            matches.put("gf", gf);
+        }
     }
 
 
@@ -139,13 +164,14 @@ public class Bracket extends StackPane {
      * @param x x coord
      * @param y y coord
      */
-    private void addMatchRectangle(int x, int y) {
+    private void addMatchRectangle(int x, int y, String key) {
         MatchRectangle match = new MatchRectangle();
         match.load();
         match.updateText();
         match.setTranslateX(x);
         match.setTranslateY(y);
         this.getChildren().add(match);
+        matches.put(key, match);
     }
 
 
@@ -193,12 +219,13 @@ public class Bracket extends StackPane {
         int nextPosX = offsetX;
         int nextPosY = yStep;
         int bsize = bracketSize-1;
+        int matchCnt = 0;
 
         for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
             addHandVLinesLooser(nextPosX, nextPosY, 0, i, bracketSize - bsize - 1);
             addHandVLinesLooser(nextPosX+offsetX, nextPosY, 1, i, bracketSize - bsize - 1);
-            addMatchRectangle(nextPosX, nextPosY);
-            addMatchRectangle(nextPosX+offsetX, nextPosY);
+            addMatchRectangle(nextPosX, nextPosY, "lb"+(++matchCnt));
+            addMatchRectangle(nextPosX+offsetX, nextPosY, "lb"+(++matchCnt));
             nextPosY += ( bsize == bracketSize-1 ? offsetY : offsetY*((int)Math.pow(2, (bracketSize - bsize - 1))) );
             if( (i + 1) == (int)Math.pow(2, bsize) ) {
                 i = -1;
@@ -210,7 +237,7 @@ public class Bracket extends StackPane {
         }
 
         //Add grand final
-        addMatchRectangle(nextPosX, yStep-offsetY);
+        addMatchRectangle(nextPosX, yStep-offsetY, "gf");
     }
 
 
@@ -272,6 +299,7 @@ public class Bracket extends StackPane {
         }
 
     }
+
 
     /**
      * method joins winner and looser views together for grand final.
