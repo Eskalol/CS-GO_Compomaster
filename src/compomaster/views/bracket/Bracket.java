@@ -1,6 +1,7 @@
 package compomaster.views.bracket;
 
 
+import compomaster.Resources;
 import compomaster.models.teams.Team;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,11 +11,16 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  * Created by Eska on 03.03.2016.
  */
 public class Bracket extends StackPane {
+    private Font font;
+
     private final int offsetY   = 100;
     private final int offsetX   = 300;
 
@@ -34,6 +40,7 @@ public class Bracket extends StackPane {
     public Bracket(int bracketSize) {
         this.bracketSize = bracketSize;
         this.looserBracket = false;
+        this.font = Resources.getCsgoFont(30);
     }
 
 
@@ -45,6 +52,7 @@ public class Bracket extends StackPane {
     public Bracket(int bracketSize, boolean looserBracket) {
         this.bracketSize = bracketSize;
         this.looserBracket = looserBracket;
+        this.font = Resources.getCsgoFont(18);
     }
 
 
@@ -52,9 +60,10 @@ public class Bracket extends StackPane {
      * load method for Bracket
      */
     public void load() {
-        loadWinnersBracket();
         loadZoom();
         loadDrag();
+        loadBackgroundWB();
+        loadWinnersBracket();
         loadLoosersBracket();
         joinWinnerAndLooserBracket();
     }
@@ -140,7 +149,6 @@ public class Bracket extends StackPane {
         match.setTranslateX(x);
         match.setTranslateY(y);
         this.getChildren().add(match);
-
     }
 
 
@@ -333,5 +341,51 @@ public class Bracket extends StackPane {
         l.setStroke(Color.web("f8f8f8"));
         l.setOpacity(0.7);
         return l;
+    }
+
+
+    /**
+     * maybe too much stupid hacks.
+     * loads background for bracket
+     */
+    private void loadBackgroundWB() {
+        int bsize = this.looserBracket ? bracketSize + 2 : bracketSize + 1;
+        int height = offsetY*(int)Math.pow(2, bracketSize)+offsetY;
+        height += this.looserBracket ? offsetY*(int)Math.pow(2, bracketSize-1)+offsetY : 0;
+        int width = offsetX;
+        int xOff = offsetX;
+        for(int i = 0; i < bsize; i++) {
+
+            //adding round rectangle
+            Rectangle rect = new Rectangle(width, height);
+            rect.setFill(Color.TRANSPARENT);
+            rect.setStroke(Color.web("232323"));
+            rect.setTranslateY(height/2-offsetY);
+            rect.setTranslateX(xOff-260);
+            rect.setStrokeWidth(lineThinckness);
+            rect.setOpacity(0.7);
+            this.getChildren().add(rect);
+
+            //adding round label background
+            int xLoc = xOff-260-width/2+offsetX/4+3;
+            Rectangle labelBg = new Rectangle(offsetX/2, offsetY/2);
+            labelBg.setFill(Color.web("232323"));
+            labelBg.setOpacity(0.7);
+            labelBg.setTranslateY(-73);
+            labelBg.setTranslateX(xLoc);
+            this.getChildren().add(labelBg);
+
+            //adding round label
+            Text label = new Text("Round " + (i+1));
+            label.setFill(Color.web("f8f8f8"));
+            label.setFont(font);
+            label.setTranslateY(-73);
+            label.setTranslateX(xLoc);
+            this.getChildren().addAll(label);
+
+            width = this.looserBracket ? offsetX*2 : offsetX;
+            xOff += this.looserBracket ? offsetX*2 : offsetX;
+            xOff -= i == 0 && this.looserBracket ? offsetX/2 : 0;
+        }
     }
 }
