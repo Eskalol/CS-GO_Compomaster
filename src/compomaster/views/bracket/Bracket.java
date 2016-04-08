@@ -52,7 +52,7 @@ public class Bracket extends StackPane {
     public Bracket(int bracketSize, boolean looserBracket) {
         this.bracketSize = bracketSize;
         this.looserBracket = looserBracket;
-        this.font = Resources.getCsgoFont(18);
+        this.font = Resources.getCsgoFont(30);
     }
 
 
@@ -349,14 +349,17 @@ public class Bracket extends StackPane {
      * loads background for bracket
      */
     private void loadBackgroundWB() {
-        int bsize = this.looserBracket ? bracketSize + 2 : bracketSize + 1;
+        int bsize = this.looserBracket ? bracketSize + 1 : bracketSize;
         int height = offsetY*(int)Math.pow(2, bracketSize)+offsetY;
         height += this.looserBracket ? offsetY*(int)Math.pow(2, bracketSize-1)+offsetY : 0;
         int width = offsetX;
         int xOff = offsetX;
-        for(int i = 0; i < bsize; i++) {
-
+        for(int i = 0; i <= bsize; i++) {
             //adding round rectangle
+            if(this.looserBracket && i == bsize) {
+                width = offsetX;
+                xOff -= offsetX/2;
+            }
             Rectangle rect = new Rectangle(width, height);
             rect.setFill(Color.TRANSPARENT);
             rect.setStroke(Color.web("232323"));
@@ -387,5 +390,35 @@ public class Bracket extends StackPane {
             xOff += this.looserBracket ? offsetX*2 : offsetX;
             xOff -= i == 0 && this.looserBracket ? offsetX/2 : 0;
         }
+
+        //add vertical background for WB and LB labels
+        Rectangle rect = new Rectangle(offsetY/2, height);
+        rect.setFill(Color.web("232323"));
+        rect.setOpacity(0.7);
+        rect.setTranslateX(-offsetX/2+10);
+        rect.setTranslateY(height/2-offsetY);
+        rect.setStrokeWidth(lineThinckness);
+        rect.setStroke(Color.web("232323"));
+        this.getChildren().add(rect);
+
+        //add Winner bracket label
+        Text wb = new Text(bracketSize > 1 ? "Winners Bracket" : "Winners");
+        wb.setFont(font);
+        wb.setFill(Color.web("f8f8f8"));
+        wb.setRotate(-90);
+        wb.setTranslateY(!this.looserBracket ? height/4 : (height)/4-offsetY/2);
+        wb.setTranslateX(-offsetX/2+15);
+        this.getChildren().add(wb);
+
+        if(!this.looserBracket) return;
+        
+        //add Looser bracket label
+        Text lb = new Text(bracketSize > 1 ? "Loosers Bracket" : "Loosers");
+        lb.setFont(font);
+        lb.setFill(Color.web("f8f8f8"));
+        lb.setRotate(-90);
+        lb.setTranslateY(height/2+(int)Math.pow(2, bracketSize-1)*offsetY-offsetY/2);
+        lb.setTranslateX(-offsetX/2+15);
+        this.getChildren().add(lb);
     }
 }
