@@ -1,5 +1,6 @@
 package no.eska.compomaster;
 
+import javafx.geometry.Pos;
 import no.eska.compomaster.bracket.views.Bracket;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -42,9 +43,11 @@ public class Main extends Application implements MainWindow {
 
         Bracket b = new Bracket(2, true);
         b.load();
-        b.setTranslateX(-1280/2);
-        b.setTranslateY(-720/2);
         this.addNodeToRootPane(b);
+        //this.rootPane.setAlignment(b, Pos.CENTER_LEFT);
+        //b.setTranslateX(0);
+        //
+
     }
 
     /**
