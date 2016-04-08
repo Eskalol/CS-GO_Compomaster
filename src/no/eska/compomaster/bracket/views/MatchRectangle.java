@@ -1,7 +1,7 @@
-package compomaster.views.bracket;
+package no.eska.compomaster.bracket.views;
 
-import compomaster.Resources;
-import compomaster.models.teams.Team;
+import no.eska.compomaster.Resources;
+import no.eska.compomaster.models.teams.Team;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
  * Created by Eska on 03.03.2016.
  */
 public class MatchRectangle extends StackPane {
-    private Team        team1;
+    private Team team1;
     private Team        team2;
     private Rectangle   teamBg1;
     private Rectangle   teamBg2;

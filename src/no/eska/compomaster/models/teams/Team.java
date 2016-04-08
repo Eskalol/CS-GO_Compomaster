@@ -1,4 +1,4 @@
-package compomaster.models.teams;
+package no.eska.compomaster.models.teams;
 
 /**
  * Created by Eska on 03.03.2016.

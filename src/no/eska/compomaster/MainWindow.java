@@ -1,4 +1,4 @@
-package compomaster;
+package no.eska.compomaster;
 
 import javafx.scene.Node;
 

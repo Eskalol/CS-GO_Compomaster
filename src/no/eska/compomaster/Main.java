@@ -1,15 +1,12 @@
-package compomaster;
+package no.eska.compomaster;
 
-import compomaster.models.teams.Team;
-import compomaster.views.bracket.Bracket;
+import no.eska.compomaster.bracket.views.Bracket;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import compomaster.views.bracket.MatchRectangle;
 
 /**
  * Main class

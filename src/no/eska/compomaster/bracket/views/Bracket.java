@@ -1,10 +1,7 @@
-package compomaster.views.bracket;
+package no.eska.compomaster.bracket.views;
 
 
-import compomaster.Resources;
-import compomaster.models.teams.Team;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import no.eska.compomaster.Resources;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -87,7 +84,7 @@ public class Bracket extends StackPane {
 
 
     /**
-     * method loads events for dragging bracket in window
+     * method loads events for dragging views in window
      */
     private void loadDrag() {
         this.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -111,7 +108,7 @@ public class Bracket extends StackPane {
 
 
     /**
-     * Method loads Winner bracket to stackPane
+     * Method loads Winner views to stackPane
      */
     private void loadWinnersBracket() {
         int nextPosX = 0;
@@ -153,7 +150,7 @@ public class Bracket extends StackPane {
 
 
     /**
-     * method adds horizontal and vertical lines to winners bracket
+     * method adds horizontal and vertical lines to winners views
      *
      * @param x xPosition
      * @param y yPosition
@@ -218,11 +215,11 @@ public class Bracket extends StackPane {
 
 
     /**
-     * method adds horizontal and vertical lines to Looser bracket
+     * method adds horizontal and vertical lines to Looser views
      *
      * @param x xPosition
      * @param y yPosition
-     * @param matchType match type 0 is first column in looser bracket round 1 is second column
+     * @param matchType match type 0 is first column in looser views round 1 is second column
      * @param matchRow match row in looserbracket round
      * @param depth round/depth of tree
      */
@@ -277,12 +274,12 @@ public class Bracket extends StackPane {
     }
 
     /**
-     * method joins winner and looser bracket together for grand final.
+     * method joins winner and looser views together for grand final.
      */
     private void joinWinnerAndLooserBracket() {
         if(!this.looserBracket) return;
 
-        //adding horisontal line for winner of winner bracket
+        //adding horisontal line for winner of winner views
         int yPos = offsetY*(int)Math.pow(2, bracketSize)/2;
         int xPos = offsetX*bracketSize*2-lineThinckness;
         Line l1 = getHorizontalLine(offsetX+50);
@@ -290,7 +287,7 @@ public class Bracket extends StackPane {
         l1.setTranslateY(yPos-33);
         this.getChildren().add(l1);
         
-        //adding vertical line to join winner and looser bracket
+        //adding vertical line to join winner and looser views
         xPos = offsetX*bracketSize*2+offsetX/2+20;
         int w2Llen = offsetY*(int)Math.pow(2, bracketSize-1)/2 + offsetY*(int)Math.pow(2, bracketSize) + offsetY - yPos;
         Line l2 = getVerticalLine(w2Llen);
@@ -346,7 +343,7 @@ public class Bracket extends StackPane {
 
     /**
      * maybe too much stupid hacks.
-     * loads background for bracket
+     * loads background for views
      */
     private void loadBackgroundWB() {
         int bsize = this.looserBracket ? bracketSize + 1 : bracketSize;
@@ -401,7 +398,7 @@ public class Bracket extends StackPane {
         rect.setStroke(Color.web("232323"));
         this.getChildren().add(rect);
 
-        //add Winner bracket label
+        //add Winner views label
         Text wb = new Text(bracketSize > 1 ? "Winners Bracket" : "Winners");
         wb.setFont(font);
         wb.setFill(Color.web("f8f8f8"));
@@ -411,8 +408,8 @@ public class Bracket extends StackPane {
         this.getChildren().add(wb);
 
         if(!this.looserBracket) return;
-        
-        //add Looser bracket label
+
+        //add Looser views label
         Text lb = new Text(bracketSize > 1 ? "Loosers Bracket" : "Loosers");
         lb.setFont(font);
         lb.setFill(Color.web("f8f8f8"));
