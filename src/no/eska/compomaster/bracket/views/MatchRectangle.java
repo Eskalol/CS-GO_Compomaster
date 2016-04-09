@@ -64,6 +64,7 @@ public class MatchRectangle extends StackPane {
         }
     }
 
+    
     /**
      * set name of team 1
      * @param name name of team 1
