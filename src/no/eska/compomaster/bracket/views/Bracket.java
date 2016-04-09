@@ -1,6 +1,8 @@
 package no.eska.compomaster.bracket.views;
 
 
+import javafx.geometry.Pos;
+import no.eska.compomaster.Main;
 import no.eska.compomaster.Resources;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -11,6 +13,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.w3c.dom.css.Rect;
 
 import java.util.HashMap;
 
@@ -24,7 +27,7 @@ public class Bracket extends StackPane {
     private final int   offsetY          = 100;
     private final int   offsetX          = 300;
 
-    private int         lineThinckness   = 5;
+    private int         lineThinckness   = 4;
     private boolean     looserBracket;
 
     private int         bracketSize;
@@ -64,14 +67,109 @@ public class Bracket extends StackPane {
      * load method for Bracket
      */
     public void load() {
+        loadBackground();
+        this.setAlignment(Pos.TOP_LEFT);
+        loadWBracket(75, 75);
+        loadLBracket(offsetX+75, offsetY*(int)Math.pow(2, bracketSize) + offsetY+75);
         loadZoom();
         loadDrag();
-        loadBackgroundWB();
-        loadWinnersBracket();
-        loadLoosersBracket();
-        joinWinnerAndLooserBracket();
     }
 
+
+    /**
+     * loads winners bracket
+     * @param xOff x offset
+     * @param yOff y offset
+     */
+    private void loadWBracket(int xOff, int yOff) {
+        int bsize = bracketSize;
+        int posX = xOff;
+        int posY = yOff;
+        int matchCnt = 0;
+
+        for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
+            int hlen = !this.looserBracket || bsize == bracketSize ? 50 : offsetX/2+50;
+            int vlen = offsetY*(int)Math.pow(2, bracketSize-bsize);
+            if(bsize > 0 || bsize > -1 && this.looserBracket)
+                addHLine(bsize == 0 ? hlen+MatchRectangle.WIDTH/2+50 : hlen, posX+MatchRectangle.WIDTH, posY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+            if(bsize > 0 && i % 2 == 0) {
+                addVLine(vlen, posX+MatchRectangle.WIDTH+hlen, posY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+                addHLine(hlen-lineThinckness, posX+MatchRectangle.WIDTH+hlen, posY+MatchRectangle.HEIGHT/2+vlen/2-lineThinckness/2);
+            }
+            addMatchRectangle(posX, posY, "wb"+(++matchCnt));
+            posY += offsetY*(int)Math.pow(2, bracketSize - bsize);
+            if( (i + 1) == (int)Math.pow(2, bsize) ) {
+                posY = (offsetY/2)+offsetY*((int)Math.pow(2, (bracketSize - bsize))-1)+yOff;
+                posX += this.looserBracket && bsize != bracketSize ? offsetX*2 : offsetX;
+                i = -1;
+                bsize--;
+            }
+        }
+
+        //fix grand final in hashmap
+        if(!this.looserBracket) {
+            MatchRectangle gf = matches.get("wb"+matchCnt);
+            matches.remove("wb"+matchCnt);
+            matches.put("gf", gf);
+        }
+    }
+
+
+    /**
+     * loads looserbracket
+     * @param xOff x offset
+     * @param yOff y offset
+     */
+    private void loadLBracket(int xOff, int yOff) {
+        if(!this.looserBracket) return;
+        int bsize = bracketSize-1;
+        int posX = xOff;
+        int posY = yOff;
+        int matchCnt = 0;
+
+        for( int i = 0; i < (int)Math.pow(2, bsize); i++ ) {
+            int hlen = 50;
+            int vlen = offsetY*(int)Math.pow(2, bracketSize-bsize-1);
+
+            if( bsize > -1 ) {
+                addHLine(hlen*2-lineThinckness, posX+MatchRectangle.WIDTH, posY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+                addHLine(hlen, posX+MatchRectangle.WIDTH+offsetX, posY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+            }
+            if( bsize > 0 && i % 2 == 0 ) {
+                addVLine(vlen, posX+MatchRectangle.WIDTH+hlen+offsetX, posY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+                addHLine(hlen-lineThinckness, posX+MatchRectangle.WIDTH+hlen+offsetX, posY+MatchRectangle.HEIGHT/2+vlen/2-lineThinckness/2);
+            }
+
+            //looser in winnerbracket line
+            addHLine(hlen-lineThinckness, posX+offsetX-hlen, posY+MatchRectangle.HEIGHT/4);
+            addVLine(10, posX+offsetX-hlen, posY+MatchRectangle.HEIGHT/4-10);
+
+            if( bsize+1 == bracketSize ) {
+                //first round in looser bracket
+                addHLine(hlen-lineThinckness, posX-hlen, posY+MatchRectangle.HEIGHT/4);
+                addVLine(10, posX-hlen, posY+MatchRectangle.HEIGHT/4-10);
+                addHLine(hlen-lineThinckness, posX-hlen, posY+MatchRectangle.HEIGHT/4+MatchRectangle.HEIGHT/2);
+                addVLine(10, posX-hlen, posY+MatchRectangle.HEIGHT/4+MatchRectangle.HEIGHT/2-10);
+            }
+
+            addMatchRectangle(posX, posY, "lb"+(++matchCnt));
+            addMatchRectangle(posX+offsetX, posY, "lb"+(++matchCnt));
+
+            posY += offsetY*(int)Math.pow(2, bracketSize - bsize - 1);
+            if( (i + 1) == (int)Math.pow(2, bsize) ) {
+                posY = (offsetY/2)+offsetY*((int)Math.pow(2, ((bracketSize-1) - bsize))-1)+yOff;
+                posX += offsetX*2;
+                i = -1;
+                bsize--;
+            }
+        }
+        //add grand final lines
+        addVLine(offsetY*(int)Math.pow(2, bracketSize-1)/2 + offsetY*(int)Math.pow(2, bracketSize) + offsetY - offsetY*(int)Math.pow(2, bracketSize)/2, posX-50, yOff-(offsetY/2)*(int)Math.pow(2, bracketSize)-offsetY-MatchRectangle.HEIGHT/4);
+        addHLine(50-lineThinckness, posX-50, yOff-offsetY+MatchRectangle.HEIGHT/2-lineThinckness/2);
+
+        //add grand final
+        addMatchRectangle(posX, yOff-offsetY, "gf");
+    }
 
     /**
      * returns a view of a match
@@ -124,39 +222,6 @@ public class Bracket extends StackPane {
     }
 
 
-    /**
-     * Method loads Winner views to stackPane
-     */
-    private void loadWinnersBracket() {
-        int nextPosX = 0;
-        int nextPosY = 0;
-        int bsize = bracketSize;
-        int matchCnt = 0;
-
-        for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
-            if(bsize > 0)
-                addHandVLinesWinner(nextPosX, nextPosY, i, (bracketSize - bsize));
-            addMatchRectangle(nextPosX, nextPosY, "wb"+(++matchCnt));
-            nextPosY += ( bsize == bracketSize ? offsetY : offsetY*((int)Math.pow(2, (bracketSize - bsize))) );
-            if( (i + 1) == (int)Math.pow(2, bsize) ) {
-                i = -1;
-                //calc next y positon for first match in round
-                nextPosY =  (offsetY/2)+offsetY*((int)Math.pow(2, (bracketSize - bsize))-1);
-
-                //calc next x position
-                nextPosX += (this.looserBracket && bsize < bracketSize ? offsetX*2 : offsetX);
-                bsize--;
-            }
-        }
-
-        //fix grand final in hashmap
-        if(!this.looserBracket) {
-            MatchRectangle gf = matches.get("wb"+matchCnt);
-            matches.remove("wb"+matchCnt);
-            matches.put("gf", gf);
-        }
-    }
-
 
     /**
      * adding a MatchRectangle to brakcet with given coords
@@ -165,179 +230,18 @@ public class Bracket extends StackPane {
      * @param y y coord
      */
     private void addMatchRectangle(int x, int y, String key) {
-        MatchRectangle match = new MatchRectangle();
-        match.load();
-        match.updateText();
-        match.setTranslateX(x);
-        match.setTranslateY(y);
-        this.getChildren().add(match);
-        matches.put(key, match);
+        matches.put(key, new MatchRectangle(x, y));
+        this.getChildren().add(matches.get(key));
     }
 
 
     /**
-     * method adds horizontal and vertical lines to winners views
-     *
-     * @param x xPosition
-     * @param y yPosition
-     * @param match match number in round
-     * @param depth round/depth of tree
+     * adds a horizontal line
+     * @param len length of line
+     * @param x translate pos
+     * @param y translate pos
      */
-    private void addHandVLinesWinner(int x, int y, int match, int depth) {
-        //calc length of horizontal line
-        int horLen = (this.looserBracket && depth > 0 ? offsetX/2+50 : 50);
-        int xOff = (this.looserBracket && depth > 0 ? 220 : 145);
-        Line l1 = getHorizontalLine(horLen);
-        l1.setTranslateX(x+xOff);
-        l1.setTranslateY(y+12+lineThinckness);
-        this.getChildren().add(l1);
-
-        if(match % 2 == 0){
-            int vLineLen = ( depth == 0 ? offsetY : offsetY*((int)Math.pow(2, depth)) );
-            int yPos = ( depth == 0 ? y+62 : y+(offsetY/2)+offsetY*((int)Math.pow(2, depth)-1)-vLineLen/2+62 )+lineThinckness;
-            Line l2 = getVerticalLine(vLineLen);
-            l2.setTranslateX(x+xOff+horLen/2);
-            l2.setTranslateY(yPos);
-            this.getChildren().add(l2);
-
-            int horX = horLen-4;
-            Line l3 = getHorizontalLine(horX);
-            l3.setTranslateX(x+xOff+horLen/2+horX/2);
-            l3.setTranslateY(yPos);
-            this.getChildren().add(l3);
-        }
-    }
-
-
-    /**
-     * method loads loosersbracket
-     */
-    private void loadLoosersBracket() {
-        if(!this.looserBracket) return;
-
-        int yStep = offsetY*(int)Math.pow(2, bracketSize) + offsetY;
-        int nextPosX = offsetX;
-        int nextPosY = yStep;
-        int bsize = bracketSize-1;
-        int matchCnt = 0;
-
-        for(int i = 0; i < (int)Math.pow(2, bsize); i++) {
-            addHandVLinesLooser(nextPosX, nextPosY, 0, i, bracketSize - bsize - 1);
-            addHandVLinesLooser(nextPosX+offsetX, nextPosY, 1, i, bracketSize - bsize - 1);
-            addMatchRectangle(nextPosX, nextPosY, "lb"+(++matchCnt));
-            addMatchRectangle(nextPosX+offsetX, nextPosY, "lb"+(++matchCnt));
-            nextPosY += ( bsize == bracketSize-1 ? offsetY : offsetY*((int)Math.pow(2, (bracketSize - bsize - 1))) );
-            if( (i + 1) == (int)Math.pow(2, bsize) ) {
-                i = -1;
-                //calc next y positon for first match in round
-                nextPosY =  (offsetY/2)+offsetY*((int)Math.pow(2, (bracketSize - bsize-1))-1)+yStep;
-                bsize--;
-                nextPosX += offsetX*2;
-            }
-        }
-
-        //Add grand final
-        addMatchRectangle(nextPosX, yStep-offsetY, "gf");
-    }
-
-
-    /**
-     * method adds horizontal and vertical lines to Looser views
-     *
-     * @param x xPosition
-     * @param y yPosition
-     * @param matchType match type 0 is first column in looser views round 1 is second column
-     * @param matchRow match row in looserbracket round
-     * @param depth round/depth of tree
-     */
-    private void addHandVLinesLooser(int x, int y, int matchType, int matchRow, int depth) {
-        //calc length of horizontal line
-        int horLen = ( matchType == 0 ? 96 : 50);
-        int xOff = (matchType == 0 ? 168 : 145);
-
-        Line l1 = getHorizontalLine(horLen);
-        l1.setTranslateX(x+xOff);
-        l1.setTranslateY(y+12+lineThinckness);
-        this.getChildren().add(l1);
-
-        //first add lines for looser in winnersbracket round
-        if(matchType == 1 || depth == 0) {
-            Line l2 = getHorizontalLine(45);
-            l2.setTranslateX(x - 107);
-            l2.setTranslateY(y);
-            this.getChildren().add(l2);
-            Line l3 = getVerticalLine(10);
-            l3.setTranslateX(x - 130);
-            l3.setTranslateY(y - 5);
-            this.getChildren().add(l3);
-        }
-
-        //first round in looserbracket
-        if(depth == 0 && matchType == 0) {
-            Line l4 = getHorizontalLine(45);
-            l4.setTranslateX(x - 107);
-            l4.setTranslateY(y + 35);
-            this.getChildren().add(l4);
-            Line l5 = getVerticalLine(10);
-            l5.setTranslateX(x - 130);
-            l5.setTranslateY(y + 30);
-            this.getChildren().add(l5);
-        }
-
-        if(matchRow % 2 == 0 && matchType == 1 && depth+1 != bracketSize) {
-            int vLineLen = offsetY*((int)Math.pow(2, depth));
-            int yPos = y+(offsetY/2)+offsetY*((int)Math.pow(2, depth)-1)-vLineLen/2+62+lineThinckness;
-            Line l6 = getVerticalLine(vLineLen);
-            l6.setTranslateX(x+170);
-            l6.setTranslateY(yPos);
-            this.getChildren().add(l6);
-
-            Line l7 = getHorizontalLine(46);
-            l7.setTranslateX(x+170+23);
-            l7.setTranslateY(yPos);
-            this.getChildren().add(l7);
-        }
-
-    }
-
-
-    /**
-     * method joins winner and looser views together for grand final.
-     */
-    private void joinWinnerAndLooserBracket() {
-        if(!this.looserBracket) return;
-
-        //adding horisontal line for winner of winner views
-        int yPos = offsetY*(int)Math.pow(2, bracketSize)/2;
-        int xPos = offsetX*bracketSize*2-lineThinckness;
-        Line l1 = getHorizontalLine(offsetX+50);
-        l1.setTranslateX(xPos);
-        l1.setTranslateY(yPos-33);
-        this.getChildren().add(l1);
-        
-        //adding vertical line to join winner and looser views
-        xPos = offsetX*bracketSize*2+offsetX/2+20;
-        int w2Llen = offsetY*(int)Math.pow(2, bracketSize-1)/2 + offsetY*(int)Math.pow(2, bracketSize) + offsetY - yPos;
-        Line l2 = getVerticalLine(w2Llen);
-        l2.setTranslateX(xPos);
-        l2.setTranslateY(w2Llen/2+yPos-33);
-        this.getChildren().add(l2);
-
-        //line to grand final
-        Line l3 = getHorizontalLine(46);
-        l3.setTranslateX(xPos+23);
-        l3.setTranslateY(yPos*2+17);
-        this.getChildren().add(l3);
-    }
-
-
-    /**
-     * method return horizontal line with given length
-     *
-     * @param len length
-     * @return
-     */
-    private Line getHorizontalLine(int len) {
+    private void addHLine(int len, int x, int y) {
         Line l = new Line();
         l.setStartX(0);
         l.setStartY(0);
@@ -346,17 +250,19 @@ public class Bracket extends StackPane {
         l.setStrokeWidth(lineThinckness);
         l.setStroke(Color.web("f8f8f8"));
         l.setOpacity(0.7);
-        return l;
+        l.setTranslateX(x);
+        l.setTranslateY(y);
+        this.getChildren().add(l);
     }
 
 
     /**
-     * method returns vertical line with given length
-     *
-     * @param len length
-     * @return
+     * adds a vertical line
+     * @param len length of line
+     * @param x translate pos
+     * @param y translate pos
      */
-    private Line getVerticalLine(int len) {
+    private void addVLine(int len, int x, int y) {
         Line l = new Line();
         l.setStartX(0);
         l.setStartY(0);
@@ -365,74 +271,66 @@ public class Bracket extends StackPane {
         l.setStrokeWidth(lineThinckness);
         l.setStroke(Color.web("f8f8f8"));
         l.setOpacity(0.7);
-        return l;
+        l.setTranslateX(x);
+        l.setTranslateY(y);
+        this.getChildren().add(l);
     }
 
 
     /**
-     * maybe too much stupid hacks.
-     * loads background for views
+     * loads background
      */
-    private void loadBackgroundWB() {
+    public void loadBackground() {
         int bsize = this.looserBracket ? bracketSize + 1 : bracketSize;
         int height = offsetY*(int)Math.pow(2, bracketSize)+offsetY;
         height += this.looserBracket ? offsetY*(int)Math.pow(2, bracketSize-1)+offsetY : 0;
         int width = offsetX;
-        int xOff = offsetX;
+        int xOff = 50;
+
         for(int i = 0; i <= bsize; i++) {
-            //adding round rectangle
-            if(this.looserBracket && i == bsize) {
-                width = offsetX;
-                xOff -= offsetX/2;
-            }
+            width = !this.looserBracket || i == bsize || i == 0 ? offsetX : offsetX*2;
+
             Rectangle rect = new Rectangle(width, height);
             rect.setFill(Color.TRANSPARENT);
             rect.setStroke(Color.web("232323"));
-            rect.setTranslateY(height/2-offsetY);
-            rect.setTranslateX(xOff-260);
+            rect.setTranslateY(0);
+            rect.setTranslateX(xOff);
             rect.setStrokeWidth(lineThinckness);
             rect.setOpacity(0.7);
             this.getChildren().add(rect);
 
-            //adding round label background
-            int xLoc = xOff-260-width/2+offsetX/4+3;
             Rectangle labelBg = new Rectangle(offsetX/2, offsetY/2);
             labelBg.setFill(Color.web("232323"));
             labelBg.setOpacity(0.7);
-            labelBg.setTranslateY(-73);
-            labelBg.setTranslateX(xLoc);
+            labelBg.setTranslateX(xOff+lineThinckness);
+            labelBg.setTranslateY(lineThinckness);
             this.getChildren().add(labelBg);
 
-            //adding round label
             Text label = new Text("Round " + (i+1));
             label.setFill(Color.web("f8f8f8"));
             label.setFont(font);
-            label.setTranslateY(-73);
-            label.setTranslateX(xLoc);
+            label.setTranslateX(xOff+lineThinckness+10);
+            label.setTranslateY(20);
             this.getChildren().addAll(label);
 
-            width = this.looserBracket ? offsetX*2 : offsetX;
-            xOff += this.looserBracket ? offsetX*2 : offsetX;
-            xOff -= i == 0 && this.looserBracket ? offsetX/2 : 0;
+
+            xOff += width;
         }
 
-        //add vertical background for WB and LB labels
-        Rectangle rect = new Rectangle(offsetY/2, height);
-        rect.setFill(Color.web("232323"));
-        rect.setOpacity(0.7);
-        rect.setTranslateX(-offsetX/2+10);
-        rect.setTranslateY(height/2-offsetY);
-        rect.setStrokeWidth(lineThinckness);
-        rect.setStroke(Color.web("232323"));
-        this.getChildren().add(rect);
+        Rectangle sideBar = new Rectangle(50, height+lineThinckness);
+        sideBar.setFill(Color.web("232323"));
+        setTranslateX(0);
+        setTranslateY(0);
+        setOpacity(0.7);
+        this.getChildren().add(sideBar);
 
         //add Winner views label
         Text wb = new Text(bracketSize > 1 ? "Winners Bracket" : "Winners");
         wb.setFont(font);
         wb.setFill(Color.web("f8f8f8"));
         wb.setRotate(-90);
-        wb.setTranslateY(!this.looserBracket ? height/4 : (height)/4-offsetY/2);
-        wb.setTranslateX(-offsetX/2+15);
+        wb.setTranslateY((!this.looserBracket ? height/4 : (height)/4-offsetY/2)+(bracketSize > 1 ? 100 : 50));
+        wb.setTranslateX(bracketSize > 1 ? -100 : -25);
         this.getChildren().add(wb);
 
         if(!this.looserBracket) return;
@@ -442,8 +340,9 @@ public class Bracket extends StackPane {
         lb.setFont(font);
         lb.setFill(Color.web("f8f8f8"));
         lb.setRotate(-90);
-        lb.setTranslateY(height/2+(int)Math.pow(2, bracketSize-1)*offsetY-offsetY/2);
-        lb.setTranslateX(-offsetX/2+15);
+        lb.setTranslateY(height/2+(int)Math.pow(2, bracketSize-1)*offsetY-offsetY/2+(bracketSize > 1 ? 100 : 50));
+        lb.setTranslateX(bracketSize > 1 ? -100 : -25);
         this.getChildren().add(lb);
     }
+
 }

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import no.eska.compomaster.bracket.views.MatchRectangle;
 
 /**
  * Main class
@@ -21,6 +22,7 @@ public class Main extends Application implements MainWindow {
     private Stage       primaryStage;
     private Scene       primaryScene;
     private StackPane   rootPane;
+
 
     /**
      * Start method
@@ -41,14 +43,23 @@ public class Main extends Application implements MainWindow {
         this.primaryStage.setResizable(true);
         this.primaryStage.show();
 
-        Bracket b = new Bracket(2, true);
+        //MatchRectangle rect = new MatchRectangle(400, 400);
+        //rect.load();
+        //this.addNodeToRootPane(rect);
+
+
+        Bracket b = new Bracket(3, true);
         b.load();
         this.addNodeToRootPane(b);
+        b.setTranslateY(100);
+        b.setTranslateX(100);
+
         //this.rootPane.setAlignment(b, Pos.CENTER_LEFT);
         //b.setTranslateX(0);
         //
 
     }
+
 
     /**
      * Init primary scene and adds rootPane to scene.

@@ -1,5 +1,13 @@
 package no.eska.compomaster.bracket.views;
 
+import com.sun.javafx.scene.control.skin.LabeledText;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.TextAlignment;
 import no.eska.compomaster.Resources;
 import no.eska.compomaster.models.teams.Team;
 
@@ -13,188 +21,85 @@ import javafx.scene.text.Text;
  * Created by Eska on 03.03.2016.
  */
 public class MatchRectangle extends StackPane {
-    private Team team1;
-    private Team        team2;
-    private Rectangle   teamBg1;
-    private Rectangle   teamBg2;
-    private Rectangle   teamBgWins1;
-    private Rectangle   teamBgWins2;
-    private Text        teamName1;
-    private Text        teamName2;
-    private int         team1Wins;
-    private int         team2Wins;
-    private Text        team1WinAmount;
-    private Text        team2WinAmount;
-    private Font        font;
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 70;
 
-    /**
-     * constructor
-     *
-     * @param team1 team 1
-     * @param team2 team 2
-     */
-    public MatchRectangle(Team team1, Team team2) {
-        this.team1  = team1;
-        this.team2  = team2;
+    private final int ARC = 10;
+    private final double OPACITY = 0.7;
+
+    private final int FONTSIZE = 18;
+
+
+    private TeamInMatch team1;
+    private TeamInMatch team2;
+
+    private Font font;
+    private Rectangle outerRect;
+
+    public MatchRectangle(int x, int y) {
+        this.setAlignment(Pos.TOP_LEFT);
+        font = Resources.getCsgoFont(FONTSIZE);
+        this.setTranslateX(x);
+        this.setTranslateY(y);
+        load();
     }
-
-
-    /**
-     * constructor
-     */
-    public MatchRectangle() {
-        this.team1  = null;
-        this.team2  = null;
-    }
-
 
     public void load() {
-        //loads the font
-        font        = Resources.getCsgoFont(18);
-
-        //background for team 1
-        teamBg1     = new Rectangle(165, 35);
-        teamBg1.setFill(Color.web("fe721d"));
-        teamBg1.setOpacity(0.7);
-        teamBg1.setArcHeight(10);
-        teamBg1.setArcWidth(10);
-        //text for team 1
-        teamName1   = new Text();
-        teamName1.setFont(font);
-        //background for team 1 amount of wins
-        teamBgWins1 = new Rectangle(35, 35);
-        teamBgWins1.setOpacity(0.7);
-        teamBgWins1.setFill(Color.web("232323"));
-        teamBgWins1.setTranslateX(102);
-        teamBgWins1.setArcWidth(10);
-        teamBgWins1.setArcHeight(10);
-        //text for team 1 amount of wins
-        team1WinAmount = new Text();
-        team1WinAmount.setFill(Color.web("f8f8f8"));
-        team1WinAmount.setTranslateX(101);
-        team1WinAmount.setFont(font);
-
-        //background for team 2
-        teamBg2     = new Rectangle(165, 35);
-        teamBg2.setTranslateY(35);
-        teamBg2.setFill(Color.web("f8f8f8"));
-        teamBg2.setOpacity(0.7);
-        teamBg2.setArcHeight(10);
-        teamBg2.setArcWidth(10);
-        //text fir team 2
-        teamName2   = new Text();
-        teamName2.setTranslateY(35);
-        teamName2.setFont(font);
-        //backgroun for team 2 amount of wins
-        teamBgWins2 = new Rectangle(35, 35);
-        teamBgWins2.setOpacity(0.7);
-        teamBgWins2.setFill(Color.web("232323"));
-        teamBgWins2.setTranslateY(35);
-        teamBgWins2.setTranslateX(102);
-        teamBgWins2.setArcWidth(10);
-        teamBgWins2.setArcHeight(10);
-        //text for team 2 amount of wins
-        team2WinAmount = new Text();
-        team2WinAmount.setFill(Color.web("f8f8f8"));
-        team2WinAmount.setTranslateX(101);
-        team2WinAmount.setTranslateY(35);
-        team2WinAmount.setFont(font);
-
-        this.getChildren().addAll(teamBg1, teamBg2, teamName1, teamName2, teamBgWins1, teamBgWins2, team1WinAmount, team2WinAmount);
+        loadHoverGlow();
+        this.team1 = new TeamInMatch(Color.web("fe721d"), font, ARC, OPACITY, WIDTH, HEIGHT / 2);
+        this.team2 = new TeamInMatch(Color.web("f8f8f8"), font, ARC, OPACITY, WIDTH, HEIGHT / 2);
+        team2.setTranslateY(HEIGHT / 2);
+        this.getChildren().addAll(team1, team2);
+        loadMouseHover();
+        loadMouseClick();
     }
 
 
     /**
-     *
+     * loads Hover glow
+     * TODO: fix transparent background of rectangle
      */
-    public void updateText() {
-        String tName1 = (team1 == null) ? "TBA" : team1.getTeamName();
-        String tName2 = (team2 == null) ? "TBA" : team2.getTeamName();
+    public void loadHoverGlow() {
+        DropShadow outerGlow = new DropShadow();
+        outerGlow.setColor(Color.web("f8f8f8"));
+        outerGlow.setOffsetX(0);
+        outerGlow.setOffsetY(0);
+        outerGlow.setRadius(20);
 
-        teamName1.setText(tName1);
-        teamName2.setText(tName2);
+        outerRect = new Rectangle(200, 70);
+        outerRect.setArcHeight(10);
+        outerRect.setArcWidth(10);
+        outerRect.setEffect(outerGlow);
+        outerRect.setOpacity(0);
+        this.getChildren().add(outerRect);
 
-        team1WinAmount.setText(Integer.toString(team1Wins));
-        team2WinAmount.setText(Integer.toString(team2Wins));
-
-
-    }
-
-    /**
-     * get team 1
-     *
-     * @return team1
-     */
-    public Team getTeam1() {
-        return team1;
     }
 
 
     /**
-     * get team 2
-     *
-     * @return team2
+     * loads mouse hover glow
      */
-    public Team getTeam2() {
-        return team2;
+    private void loadMouseHover() {
+        this.setOnMouseEntered(event -> {
+            this.setTranslateY(this.getTranslateY() + 2);
+        });
+        this.setOnMouseExited(event -> {
+            this.setTranslateY(this.getTranslateY() - 2);
+        });
     }
 
 
     /**
-     * set team1
-     *
-     * @param team
+     * loads mouse click animation
      */
-    public void setTeam1(Team team) {
-        this.team1 = team;
-    }
+    private void loadMouseClick() {
+        this.setOnMousePressed(event -> {
+            outerRect.setOpacity(0.5);
+        });
 
+        this.setOnMouseReleased(event -> {
 
-    /**
-     * set team2
-     *
-     * @param team
-     */
-    public void setTeam2(Team team) {
-        this.team2 = team;
-    }
-
-
-    /**
-     * get team 1 wins
-     *
-     * @return
-     */
-    public int getTeam1Wins() {
-        return team1Wins;
-    }
-
-
-    /**
-     * set team 1 wins
-     *
-     * @param team1Wins win coint for team 1
-     */
-    public void setTeam1Wins(int team1Wins) {
-        this.team1Wins = team1Wins;
-    }
-
-
-    /**
-     * get team 2 wins
-     *
-     * @return
-     */
-    public int getTeam2Wins() {
-        return team2Wins;
-    }
-
-
-    /**
-     * set team 2 wins
-     * @param team2Wins
-     */
-    public void setTeam2Wins(int team2Wins) {
-        this.team2Wins = team2Wins;
+            outerRect.setOpacity(0);
+        });
     }
 }
