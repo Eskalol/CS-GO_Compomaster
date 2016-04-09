@@ -1,21 +1,14 @@
 package no.eska.compomaster.bracket.views;
 
-import com.sun.javafx.scene.control.skin.LabeledText;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.TextAlignment;
 import no.eska.compomaster.Resources;
-import no.eska.compomaster.models.teams.Team;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import no.eska.compomaster.bracket.models.Match;
 
 /**
  * Created by Eska on 03.03.2016.
@@ -54,6 +47,54 @@ public class MatchRectangle extends StackPane {
         loadMouseClick();
     }
 
+    public void update(Match match) {
+        if(match.getTeam1() != null) {
+            this.setTeam1Name(match.getTeam1().getName());
+            this.setTeam1Wins(match.getTeam1Wins());
+            if(this.team1.getWinCount() == -1) {
+                team1.setGlow(true);
+            }
+        }
+        if(match.getTeam2() != null) {
+            this.setTeam2Name(match.getTeam2().getName());
+            this.setTeam2Wins(match.getTeam2Wins());
+            if(this.team2.getWinCount() == -1) {
+                team2.setGlow(true);
+            }
+        }
+    }
+
+    /**
+     * set name of team 1
+     * @param name name of team 1
+     */
+    public void setTeam1Name(String name) {
+        team1.setTeamName(name);
+    }
+
+    /**
+     * set name of team 2
+     * @param name name of team 2
+     */
+    public void setTeam2Name(String name) {
+        team2.setTeamName(name);
+    }
+
+    /**
+     * sets win count for team 2, -1 == walkover
+     * @param wins win count for team 2
+     */
+    public void setTeam1Wins(int wins) {
+        team1.setWinCount(wins);
+    }
+
+    /**
+     * sets win count for team 2, -1 == walkover
+     * @param wins win count for team 2
+     */
+    public void setTeam2Wins(int wins) {
+        team2.setWinCount(wins);
+    }
 
     /**
      * loads Hover glow

@@ -32,8 +32,8 @@ public class Bracket extends StackPane {
 
     private int         bracketSize;
 
-    private double      deltaX;
-    private double      deltaY;
+    public double      deltaX;
+    public double      deltaY;
 
     private HashMap<String, MatchRectangle> matches;
 
@@ -71,8 +71,8 @@ public class Bracket extends StackPane {
         this.setAlignment(Pos.TOP_LEFT);
         loadWBracket(75, 75);
         loadLBracket(offsetX+75, offsetY*(int)Math.pow(2, bracketSize) + offsetY+75);
-        loadZoom();
-        loadDrag();
+        //loadZoom();
+        //loadDrag();
     }
 
 
@@ -108,9 +108,8 @@ public class Bracket extends StackPane {
 
         //fix grand final in hashmap
         if(!this.looserBracket) {
-            MatchRectangle gf = matches.get("wb"+matchCnt);
+            matches.put("gf", matches.get("wb"+matchCnt));
             matches.remove("wb"+matchCnt);
-            matches.put("gf", gf);
         }
     }
 
@@ -299,14 +298,14 @@ public class Bracket extends StackPane {
             rect.setOpacity(0.7);
             this.getChildren().add(rect);
 
-            Rectangle labelBg = new Rectangle(offsetX/2, offsetY/2);
+            Rectangle labelBg = new Rectangle(i == bsize ? offsetX/2 + offsetX/4 : offsetX/2, offsetY/2);
             labelBg.setFill(Color.web("232323"));
             labelBg.setOpacity(0.7);
             labelBg.setTranslateX(xOff+lineThinckness);
             labelBg.setTranslateY(lineThinckness);
             this.getChildren().add(labelBg);
 
-            Text label = new Text("Round " + (i+1));
+            Text label = new Text(i == bsize ? "Grand final" : "Round " + (i+1));
             label.setFill(Color.web("f8f8f8"));
             label.setFont(font);
             label.setTranslateX(xOff+lineThinckness+10);

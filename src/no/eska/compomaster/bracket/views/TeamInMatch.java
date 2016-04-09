@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 public class TeamInMatch extends StackPane{
     private Text        teamName;
     private Text        winCount;
-
+    private int         winC = 0;
     private Rectangle   teamBg;
     private Rectangle   winCountBg;
     private Rectangle   bg;
@@ -75,8 +75,11 @@ public class TeamInMatch extends StackPane{
      * @param wins wins < 0 = walkover
      */
     public void setWinCount(int wins) {
+        winC = wins;
         winCount.setText(wins > -1 ? wins + "" : "WO");
         winCount.setTranslateX(wins > -1 ? bg.getWidth()-bg.getHeight()/2-5 : bg.getWidth()-bg.getHeight()/2-15);
+        if(wins == -1) setGlow(true);
+        else setGlow(false);
         //TODO: dynamic text center
     }
 
@@ -85,7 +88,11 @@ public class TeamInMatch extends StackPane{
      * @param g boolean value
      */
     public void setGlow(boolean g) {
-        bg.setOpacity(g ? 0.5 : 0);
+        bg.setOpacity(g ? 1 : 0);
+    }
+
+    public int getWinCount() {
+        return winC;
     }
 
 
