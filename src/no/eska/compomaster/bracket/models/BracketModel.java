@@ -62,6 +62,7 @@ public class BracketModel {
                 bsize--;
             }
         }
+        //System.out.println("wb"+wbc + " " + "lb"+lbc);
         if(!looserBracekt) {
             matches.get("wb"+(wbc-2)).setWinnerLabel("gf");
             matches.get("wb"+(wbc-3)).setWinnerLabel("gf");
@@ -73,10 +74,11 @@ public class BracketModel {
             matches.get("gf").setLooserLabel("");
             return;
         }
-        matches.get("wb"+wbc).setWinnerLabel("gf");
-        matches.get("wb"+lbc).setWinnerLabel("gf");
-        matches.get("wb"+wbc).setLooserLabel("");
-        matches.get("wb"+lbc).setLooserLabel("");
+
+        matches.get("wb"+(wbc-1)).setWinnerLabel("gf");
+        matches.get("wb"+(lbc-1)).setWinnerLabel("gf");
+        matches.remove("lb"+lbc);
+        matches.remove("wb"+wbc);
         matches.put("gf", new Match("gf", "", "", looserBracekt));
     }
 

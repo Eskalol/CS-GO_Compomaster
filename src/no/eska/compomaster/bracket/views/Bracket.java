@@ -15,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.w3c.dom.css.Rect;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -178,48 +180,6 @@ public class Bracket extends StackPane {
     public MatchRectangle getMatch(String key) {
         return matches.get(key);
     }
-
-
-    /**
-     * method loads zoom on scroll event
-     */
-    private void loadZoom() {
-        this.setOnScroll(new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                StackPane senderObject = (StackPane)event.getSource();
-                if(senderObject.getScaleX() > 0.15 || event.getDeltaY() > 0) {
-                    senderObject.setScaleX(senderObject.getScaleX()+(event.getDeltaY()/1000)*senderObject.getScaleX());
-                    senderObject.setScaleY(senderObject.getScaleY()+(event.getDeltaY()/1000)*senderObject.getScaleY());
-                }
-            }
-        });
-    }
-
-
-    /**
-     * method loads events for dragging views in window
-     */
-    private void loadDrag() {
-        this.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                StackPane senderObject = (StackPane)event.getSource();
-                deltaX = senderObject.getTranslateX() - event.getSceneX();
-                deltaY = senderObject.getTranslateY() - event.getSceneY();
-            }
-        });
-
-        this.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                StackPane senderObject = (StackPane)event.getSource();
-                senderObject.setTranslateX(event.getSceneX() + deltaX);
-                senderObject.setTranslateY(event.getSceneY() + deltaY);
-            }
-        });
-    }
-
 
 
     /**
