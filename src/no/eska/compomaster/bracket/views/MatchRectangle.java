@@ -18,7 +18,7 @@ public class MatchRectangle extends StackPane {
     public static final int HEIGHT = 70;
 
     private final int ARC = 10;
-    private final double OPACITY = 0.7;
+    private final double OPACITY = 1;
 
     private final int FONTSIZE = 18;
 
@@ -51,20 +51,28 @@ public class MatchRectangle extends StackPane {
         if(match.getTeam1() != null) {
             this.setTeam1Name(match.getTeam1().getName());
             this.setTeam1Wins(match.getTeam1Wins());
-            if(this.team1.getWinCount() == -1) {
-                team1.setGlow(true);
-            }
         }
         if(match.getTeam2() != null) {
             this.setTeam2Name(match.getTeam2().getName());
             this.setTeam2Wins(match.getTeam2Wins());
-            if(this.team2.getWinCount() == -1) {
+        }
+
+        //set winner
+        if(match.getWinner() != null) {
+            if(match.getWinner().equals("1")) {
+                team1.setGlow(true);
+                team2.setGlow(false);
+            } else if(match.getWinner().equals("2")) {
                 team2.setGlow(true);
+                team1.setGlow(false);
             }
+        } else {
+            team2.setGlow(false);
+            team1.setGlow(false);
         }
     }
 
-    
+
     /**
      * set name of team 1
      * @param name name of team 1

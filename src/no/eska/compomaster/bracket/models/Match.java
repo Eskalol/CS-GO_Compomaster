@@ -1,9 +1,13 @@
 package no.eska.compomaster.bracket.models;
 
+import java.util.Objects;
+
 /**
  * Created by Eska on 09.04.2016.
  */
 public class Match {
+
+    private String winner;
 
     private int team1Wins = 0;
     private int team2Wins = 0;
@@ -71,11 +75,31 @@ public class Match {
         return this.team2Wins;
     }
 
-    public void setTeam1Wins(int wins) {
-        this.team1Wins = wins;
+    /**
+     * return match winner
+     * @return match winner number 1 or 2.
+     */
+    public String getWinner() {
+        return this.winner;
     }
 
+    /**
+     * sets amount of wins
+     * @param wins amount
+     */
+    public void setTeam1Wins(int wins) {
+        this.team1Wins = wins;
+        if(wins == -1)
+            this.winner = "1";
+    }
+
+    /**
+     * sets amount of wins
+     * @param wins win amount
+     */
     public void setTeam2Wins(int wins) {
         this.team2Wins = wins;
+        if(wins == -1)
+            this.winner = "2";
     }
 }
