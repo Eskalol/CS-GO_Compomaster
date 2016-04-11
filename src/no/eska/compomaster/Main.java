@@ -1,16 +1,13 @@
 package no.eska.compomaster;
 
-import javafx.geometry.Pos;
-import no.eska.compomaster.bracket.controllers.BracketController;
+import no.eska.compomaster.Start.View.StartView;
 import no.eska.compomaster.bracket.models.Team;
-import no.eska.compomaster.bracket.views.Bracket;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import no.eska.compomaster.bracket.views.MatchRectangle;
 
 import java.util.ArrayList;
 
@@ -29,7 +26,7 @@ public class Main extends Application implements MainWindow {
 
 
     /**
-     * Start method
+     * StartView method
      *
      * @param primaryStage
      * @throws Exception
@@ -47,7 +44,6 @@ public class Main extends Application implements MainWindow {
         this.primaryStage.setResizable(true);
         this.primaryStage.show();
 
-
         ArrayList<Team> teams = new ArrayList<>();
         teams.add(new Team("Imba"));
         teams.add(new Team("Karasjok"));
@@ -57,7 +53,9 @@ public class Main extends Application implements MainWindow {
         teams.add(new Team("NoA"));
         teams.add(new Team("LOL"));
 
-        new BracketController(teams, true, this);
+
+        addNodeToRootPane(new StartView());
+        //new BracketController(teams, true, this);
         //MatchRectangle rect = new MatchRectangle(400, 400);
         //rect.load();
         //this.addNodeToRootPane(rect);

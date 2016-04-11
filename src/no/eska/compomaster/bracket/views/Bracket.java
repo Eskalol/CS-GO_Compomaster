@@ -154,13 +154,13 @@ public class Bracket extends StackPane {
             }
 
             addMatchRectangle(posX, posY, "lb"+(++matchCnt));
-            addMatchRectangle(posX+offsetX, posY, "lb"+(++matchCnt));
-
+            addMatchRectangle(posX+offsetX, posY, "lb"+(matchCnt+(int)Math.pow(2, bsize)));
             posY += offsetY*(int)Math.pow(2, bracketSize - bsize - 1);
             if( (i + 1) == (int)Math.pow(2, bsize) ) {
                 posY = (offsetY/2)+offsetY*((int)Math.pow(2, ((bracketSize-1) - bsize))-1)+yOff;
                 posX += offsetX*2;
                 i = -1;
+                matchCnt += (int)Math.pow(2, bsize);
                 bsize--;
             }
         }
@@ -295,7 +295,7 @@ public class Bracket extends StackPane {
         if(!this.looserBracket) return;
 
         //add Looser views label
-        Text lb = new Text(bracketSize > 1 ? "Loosers Bracket" : "Loosers");
+        Text lb = new Text(bracketSize > 1 ? "Losers Bracket" : "Loosers");
         lb.setFont(font);
         lb.setFill(Color.web("f8f8f8"));
         lb.setRotate(-90);

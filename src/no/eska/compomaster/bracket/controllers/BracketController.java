@@ -25,6 +25,8 @@ public class BracketController {
     private Bracket bracket;
     private BracketModel bracketModel;
 
+    private boolean drag = false;
+
     public BracketController(ArrayList<Team> teams, boolean loosersBracket, MainWindow main) {
         this.main               = main;
         int startMatches        = teams.size() % 2 != 0 ? teams.size()/2+1 : teams.size()/2;
@@ -42,9 +44,20 @@ public class BracketController {
 
     private void loadMatchRectanglEvents() {
         for(String key : bracketModel.getMatches().keySet()) {
-            System.out.println(key);
+            bracket.getMatch(key).setOnMousePressed(event -> {
+                bracket.getMatch(key).setGlow(true);
+            });
+            bracket.getMatch(key).setOnMouseReleased(event -> {
+                bracket.getMatch(key).setGlow(false);
+                if(!drag) {
+                    //Do stuff
+                    //System.out.println("fire event: " + key);
+                }
+                drag = false;
+            });
         }
     }
+
 
     /**
      * loads drag and drop, and zoom events in bracket.
@@ -59,6 +72,7 @@ public class BracketController {
         bracket.setOnMouseDragged(event ->  {
             bracket.setTranslateX(event.getSceneX() + bracket.deltaX);
             bracket.setTranslateY(event.getSceneY() + bracket.deltaY);
+            drag = true;
         });
 
         //Zoom

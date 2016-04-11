@@ -1,0 +1,25 @@
+.scroll-pane > .viewport {
+    -fx-background-color: #232323;
+}
+.scroll-pane {
+     -fx-background-color: #f8f8f8;
+
+ }
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: f8f8f8;
+}
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #f8f8f8;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #f8f8f8;
+}

@@ -44,7 +44,6 @@ public class MatchRectangle extends StackPane {
         team2.setTranslateY(HEIGHT / 2);
         this.getChildren().addAll(team1, team2);
         loadMouseHover();
-        loadMouseClick();
     }
 
     public void update(Match match) {
@@ -71,6 +70,16 @@ public class MatchRectangle extends StackPane {
             team1.setGlow(false);
         }
     }
+
+
+    /**
+     * sets glow if true
+     * @param bool
+     */
+    public void setGlow(boolean bool) {
+        outerRect.setOpacity(bool ? 1 : 0);
+    }
+
 
 
     /**
@@ -138,18 +147,4 @@ public class MatchRectangle extends StackPane {
         });
     }
 
-
-    /**
-     * loads mouse click animation
-     */
-    private void loadMouseClick() {
-        this.setOnMousePressed(event -> {
-            outerRect.setOpacity(0.5);
-        });
-
-        this.setOnMouseReleased(event -> {
-
-            outerRect.setOpacity(0);
-        });
-    }
 }

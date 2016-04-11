@@ -2,6 +2,7 @@ package no.eska.compomaster;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -25,5 +26,17 @@ public class Resources {
      */
     public static ImageView getImageView(String name) {
         return new ImageView(new Image(Resources.class.getResource("/resources/img/" + name).toExternalForm()));
+    }
+
+    public static Color getGray() {
+        return Color.web("232323");
+    }
+
+    public static Color getWhite() {
+        return Color.web("f8f8f8");
+    }
+
+    public static Color getOrange() {
+        return Color.web("fe721d");
     }
 }
