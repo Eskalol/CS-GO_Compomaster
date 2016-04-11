@@ -295,7 +295,7 @@ public class Bracket extends StackPane {
         if(!this.looserBracket) return;
 
         //add Looser views label
-        Text lb = new Text(bracketSize > 1 ? "Losers Bracket" : "Loosers");
+        Text lb = new Text(bracketSize > 1 ? "Losers Bracket" : "Losers");
         lb.setFont(font);
         lb.setFill(Color.web("f8f8f8"));
         lb.setRotate(-90);

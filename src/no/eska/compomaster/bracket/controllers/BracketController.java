@@ -27,18 +27,25 @@ public class BracketController {
 
     private boolean drag = false;
 
-    public BracketController(ArrayList<Team> teams, boolean loosersBracket, MainWindow main) {
+    public BracketController(MainWindow main) {
         this.main               = main;
+
+    }
+
+    public void launch(ArrayList<String> t, boolean losersbracket) {
+        ArrayList<Team> teams = new ArrayList<>();
+        for(String s : t)
+            teams.add(new Team(s));
+
         int startMatches        = teams.size() % 2 != 0 ? teams.size()/2+1 : teams.size()/2;
         int bracketSize         = (int)Math.ceil(Math.log(startMatches) / Math.log(2));
-        this.bracket            = new Bracket(bracketSize, loosersBracket);
+        this.bracket            = new Bracket(bracketSize, losersbracket);
         this.bracketModel       = new BracketModel(teams);
-        bracketModel.initMatchModel(bracketSize, loosersBracket);
+        bracketModel.initMatchModel(bracketSize, losersbracket);
         bracketModel.initTeamsInMatchModel();
         initBracketView();
         updateViewFromModel();
         loadMatchRectanglEvents();
-
     }
 
 
@@ -102,5 +109,8 @@ public class BracketController {
         }
     }
 
+    public Bracket getBracket() {
+        return this.bracket;
+    }
 
 }

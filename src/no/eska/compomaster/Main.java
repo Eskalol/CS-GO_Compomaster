@@ -1,6 +1,12 @@
 package no.eska.compomaster;
 
-import no.eska.compomaster.Start.View.StartView;
+import javafx.animation.TranslateTransition;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableDoubleValue;
+import javafx.util.Duration;
+import no.eska.compomaster.bracket.controllers.BracketController;
+import no.eska.compomaster.start.views.StartView;
 import no.eska.compomaster.bracket.models.Team;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -8,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
+import no.eska.compomaster.start.controllers.StartController;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +30,9 @@ public class Main extends Application implements MainWindow {
     private Scene       primaryScene;
     private StackPane   rootPane;
 
+    private StartController sc;
+    private StartView sw;
+    private BracketController bc;
 
     /**
      * StartView method
@@ -32,7 +41,7 @@ public class Main extends Application implements MainWindow {
      * @throws Exception
      */
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         this.primaryStage   = primaryStage;
         this.height         = 720;
         this.width          = 1280;
@@ -44,35 +53,36 @@ public class Main extends Application implements MainWindow {
         this.primaryStage.setResizable(true);
         this.primaryStage.show();
 
-        ArrayList<Team> teams = new ArrayList<>();
-        teams.add(new Team("Imba"));
-        teams.add(new Team("Karasjok"));
-        teams.add(new Team("noobs"));
-        teams.add(new Team("NIP"));
-        teams.add(new Team("Catch"));
-        teams.add(new Team("NoA"));
-        teams.add(new Team("LOL"));
+        this.sc = new StartController();
+        this.sw = sc.getView();
+        sw.setTranslateX(primaryStage.getWidth()/2-500);
+        addNodeToRootPane(sw);
 
+        primaryStage.widthProperty().addListener((obs, old, newValue) -> {
+            System.out.println(sw.getWidth());
+            sw.setTranslateX((newValue.doubleValue()/2-500-sw.translateOffset));
+        });
 
-        addNodeToRootPane(new StartView());
-        //new BracketController(teams, true, this);
-        //MatchRectangle rect = new MatchRectangle(400, 400);
-        //rect.load();
-        //this.addNodeToRootPane(rect);
-
-
-        //Bracket b = new Bracket(3, true);
-        //b.load();
-        //this.addNodeToRootPane(b);
-        //b.setTranslateY(100);
-        //b.setTranslateX(100);
-
-        //this.rootPane.setAlignment(b, Pos.CENTER_LEFT);
-        //b.setTranslateX(0);
-        //
-
+        loadLaunch();
     }
 
+    private void loadLaunch() {
+        bc = new BracketController(this);
+        sc.setOnLaunch(event -> {
+            TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), sw);
+            sw.translateOffset = -primaryStage.getWidth()-500;
+            tt.setToX(-primaryStage.getWidth()-1000);
+
+            bc.launch(sc.getTeams(), sc.getLosersBracket());
+            TranslateTransition tt1 = new TranslateTransition(Duration.seconds(0.5), bc.getBracket());
+            bc.getBracket().setTranslateX(primaryStage.getWidth());
+            bc.getBracket().setTranslateY(75);
+            tt1.setToX(20);
+
+            tt.play();
+            tt1.play();
+        });
+    }
 
     /**
      * Init primary scene and adds rootPane to scene.
