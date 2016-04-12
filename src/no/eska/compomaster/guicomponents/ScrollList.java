@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class ScrollList extends ScrollPane {
     private VBox content;
+    private int size = 0;
 
     public ScrollList(int w, int h, int x, int y) {
         this.setMaxSize(w, h);
@@ -29,6 +30,7 @@ public class ScrollList extends ScrollPane {
      */
     public void addListElement(Node element) {
         this.content.getChildren().add(element);
+        this.size++;
     }
 
     /**
@@ -37,6 +39,9 @@ public class ScrollList extends ScrollPane {
      */
     public void removeListElement(Node element) {
         this.content.getChildren().remove(element);
+        this.size--;
     }
+
+    public int getSize() { return this.size; }
 
 }

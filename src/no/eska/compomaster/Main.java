@@ -5,6 +5,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.util.Duration;
+import no.eska.compomaster.Headline.view.Headline;
 import no.eska.compomaster.bracket.controllers.BracketController;
 import no.eska.compomaster.start.views.StartView;
 import no.eska.compomaster.bracket.models.Team;
@@ -33,6 +34,7 @@ public class Main extends Application implements MainWindow {
     private StartController sc;
     private StartView sw;
     private BracketController bc;
+    private Headline hl;
 
     /**
      * StartView method
@@ -53,6 +55,7 @@ public class Main extends Application implements MainWindow {
         this.primaryStage.setResizable(true);
         this.primaryStage.show();
 
+        loadHeader();
         this.sc = new StartController();
         this.sw = sc.getView();
         sw.setTranslateX(primaryStage.getWidth()/2-500);
@@ -61,14 +64,22 @@ public class Main extends Application implements MainWindow {
         primaryStage.widthProperty().addListener((obs, old, newValue) -> {
             System.out.println(sw.getWidth());
             sw.setTranslateX((newValue.doubleValue()/2-500-sw.translateOffset));
+            hl.stretch(newValue.doubleValue());
         });
-
         loadLaunch();
+    }
+
+    private void loadHeader() {
+        this.hl = new Headline(primaryStage.getWidth());
+        this.hl.setText("CS:GO Compomaster by Eskalol");
+        addNodeToRootPane(hl);
     }
 
     private void loadLaunch() {
         bc = new BracketController(this);
         sc.setOnLaunch(event -> {
+            if(!sw.isValid())
+                return;
             TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), sw);
             sw.translateOffset = -primaryStage.getWidth()-500;
             tt.setToX(-primaryStage.getWidth()-1000);
@@ -81,6 +92,7 @@ public class Main extends Application implements MainWindow {
 
             tt.play();
             tt1.play();
+            hl.setText(sc.getCompoName());
         });
     }
 
