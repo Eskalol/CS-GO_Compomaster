@@ -16,7 +16,7 @@ public class Resources {
      * @return Font
      */
     public static Font getCsgoFont(int size) {
-        return Font.loadFont(Resources.class.getResource("/resources/font/cs_regular.ttf").toExternalForm(), size);
+        return Font.loadFont(Resources.class.getResource("/no/eska/compomaster/resources/font/cs_regular.ttf").toExternalForm(), size);
     }
 
     /**
@@ -25,7 +25,11 @@ public class Resources {
      * @return ImageView
      */
     public static ImageView getImageView(String name) {
-        return new ImageView(new Image(Resources.class.getResource("/resources/img/" + name).toExternalForm()));
+        return new ImageView(new Image(Resources.class.getResource("/no/eska/compomaster/resources/img/" + name).toExternalForm()));
+    }
+
+    public static String getResource(String file) {
+        return Resources.class.getResource("/no/eska/compomaster/resources/" + file).toExternalForm();
     }
 
     public static Color getGray() {

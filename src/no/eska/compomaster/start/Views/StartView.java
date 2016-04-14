@@ -41,7 +41,7 @@ public class StartView extends StackPane{
         this.setHeight(620);
         this.h1 = Resources.getCsgoFont(25);
         this.setOpacity(0.7);
-        this.getStylesheets().add("resources/css/startStyle.css");
+        this.getStylesheets().add(Resources.getResource("css/startStyle.css"));
         load();
     }
 

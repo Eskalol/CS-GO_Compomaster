@@ -1,11 +1,15 @@
 package no.eska.compomaster.bracket.models;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  * Created by Eska on 09.04.2016.
  */
 public class Match {
+
+    ArrayList<Map> maps;
+    private int bestOf = 1;
 
     private String winner;
 
@@ -20,6 +24,7 @@ public class Match {
     private String looserLabel = "";
 
     public Match(String matchLabel, String winnerLabel, String looserLabel, boolean looserBracket) {
+        maps = new ArrayList<>();
         this.matchLabel = matchLabel;
         this.winnerLabel = winnerLabel;
         if( looserBracket )

@@ -12,6 +12,7 @@ import java.util.Random;
 public class BracketModel {
     private HashMap<String, Match> matches;
     private ArrayList<Team> teams;
+    private ArrayList<String> maps;
 
     public BracketModel(ArrayList<Team> teams) {
         this.teams  = teams;

@@ -37,7 +37,7 @@ public class Headline extends StackPane {
         this.getChildren().addAll(bg, content);
     }
 
-    
+
     /**
      * changes header text and translates to middle
      * @param text content

@@ -1,14 +1,11 @@
 package no.eska.compomaster;
 
 import javafx.animation.TranslateTransition;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableDoubleValue;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 import no.eska.compomaster.Headline.view.Headline;
 import no.eska.compomaster.bracket.controllers.BracketController;
 import no.eska.compomaster.start.views.StartView;
-import no.eska.compomaster.bracket.models.Team;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import no.eska.compomaster.start.controllers.StartController;
-import java.util.ArrayList;
 
 /**
  * Main class
@@ -71,7 +67,7 @@ public class Main extends Application implements MainWindow {
 
     private void loadHeader() {
         this.hl = new Headline(primaryStage.getWidth());
-        this.hl.setText("CS:GO Compomaster by Eskalol");
+        this.hl.setText("CS:GO Compomaster");
         addNodeToRootPane(hl);
     }
 
@@ -105,7 +101,6 @@ public class Main extends Application implements MainWindow {
         this.primaryScene   = new Scene(this.rootPane, this.width, this.height);
         this.rootPane.setStyle("-fx-background-color: #444;");
 
-        //adding background image
         ImageView background = Resources.getImageView("csgoBackground.jpg");
         background.fitWidthProperty().bind(primaryStage.widthProperty());
         background.fitHeightProperty().bind(primaryStage.heightProperty());
