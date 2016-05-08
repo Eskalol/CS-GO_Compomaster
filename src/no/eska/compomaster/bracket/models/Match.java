@@ -8,7 +8,7 @@ import java.util.Objects;
  */
 public class Match {
 
-    ArrayList<Map> maps;
+    public ArrayList<Map> maps;
     private int bestOf = 1;
 
     private String winner;
@@ -106,5 +106,13 @@ public class Match {
         this.team2Wins = wins;
         if(wins == -1)
             this.winner = "2";
+    }
+
+    public void setBestOf(int bestOf) {
+        this.bestOf = bestOf;
+    }
+
+    public int getBestOf() {
+        return this.bestOf;
     }
 }

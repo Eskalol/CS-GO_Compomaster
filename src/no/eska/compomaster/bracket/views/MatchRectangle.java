@@ -30,6 +30,8 @@ public class MatchRectangle extends StackPane {
     private Rectangle outerRect;
 
     public MatchRectangle(int x, int y) {
+        this.setHeight(HEIGHT);
+        this.setWidth(WIDTH);
         this.setAlignment(Pos.TOP_LEFT);
         font = Resources.getCsgoFont(FONTSIZE);
         this.setTranslateX(x);

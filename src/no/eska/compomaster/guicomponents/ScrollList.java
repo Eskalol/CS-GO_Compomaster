@@ -44,4 +44,12 @@ public class ScrollList extends ScrollPane {
 
     public int getSize() { return this.size; }
 
+    /**
+     * clears the scroll list.
+     */
+    public void clear() {
+        this.getChildren().remove(content);
+        this.content = new VBox();
+        this.setContent(content);
+    }
 }

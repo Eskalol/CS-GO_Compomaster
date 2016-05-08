@@ -14,9 +14,10 @@ public class BracketModel {
     private ArrayList<Team> teams;
     private ArrayList<String> maps;
 
-    public BracketModel(ArrayList<Team> teams) {
+    public BracketModel(ArrayList<Team> teams, ArrayList<String> maps) {
         this.teams  = teams;
-        matches     = new HashMap<>();
+        this.maps   = maps;
+        this.matches     = new HashMap<>();
     }
 
 

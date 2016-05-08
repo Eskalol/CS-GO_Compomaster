@@ -63,4 +63,13 @@ public class Headline extends StackPane {
         this.bg.setWidth(width);
         content.setTranslateX(bg.getWidth()/2-(this.content.getText().length()*35)/4);
     }
+
+
+    /**
+     * returns the back button
+     * @return
+     */
+    public Button getBack() {
+        return this.back;
+    }
 }

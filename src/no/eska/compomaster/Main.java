@@ -1,7 +1,6 @@
 package no.eska.compomaster;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
 import javafx.util.Duration;
 import no.eska.compomaster.Headline.view.Headline;
 import no.eska.compomaster.bracket.controllers.BracketController;
@@ -27,11 +26,11 @@ public class Main extends Application implements MainWindow {
     private Scene       primaryScene;
     private StackPane   rootPane;
 
-    private StartController sc;
+    public StartController sc;
     private StartView sw;
     private BracketController bc;
-    private Headline hl;
-
+    public Headline hl;
+    private boolean lauched = false;
     /**
      * StartView method
      *
@@ -61,6 +60,9 @@ public class Main extends Application implements MainWindow {
             System.out.println(sw.getWidth());
             sw.setTranslateX((newValue.doubleValue()/2-500-sw.translateOffset));
             hl.stretch(newValue.doubleValue());
+            if(lauched) {
+                bc.getMatchView().translateCenter(newValue.doubleValue());
+            }
         });
         loadLaunch();
     }
@@ -74,13 +76,14 @@ public class Main extends Application implements MainWindow {
     private void loadLaunch() {
         bc = new BracketController(this);
         sc.setOnLaunch(event -> {
+            lauched = true;
             if(!sw.isValid())
                 return;
             TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), sw);
             sw.translateOffset = -primaryStage.getWidth()-500;
             tt.setToX(-primaryStage.getWidth()-1000);
 
-            bc.launch(sc.getTeams(), sc.getLosersBracket());
+            bc.launch(sc.getTeams(), sc.getMaps(), sc.getLosersBracket());
             TranslateTransition tt1 = new TranslateTransition(Duration.seconds(0.5), bc.getBracket());
             bc.getBracket().setTranslateX(primaryStage.getWidth());
             bc.getBracket().setTranslateY(75);
@@ -134,7 +137,7 @@ public class Main extends Application implements MainWindow {
      * @return window width
      */
     public int getWidth() {
-        return this.width;
+        return (int)this.primaryStage.getWidth();
     }
 
 

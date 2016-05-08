@@ -13,4 +13,17 @@ public class Map {
         this.team1Wins = team1Wins;
         this.team2Wins = team2Wins;
     }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public int getTeam1Wins() {
+        return team1Wins;
+    }
+
+    public int getTeam2Wins() {
+        return  team2Wins;
+    }
+
 }

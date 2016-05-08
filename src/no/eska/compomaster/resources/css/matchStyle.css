@@ -1,0 +1,86 @@
+@font-face {
+    font-family: cs_regular;
+    src: url('/no/eska/compomaster/resources/font/cs_regular.ttf');
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #232323;
+}
+.scroll-pane {
+    -fx-background-color: #f8f8f8;
+
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #f8f8f8;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #f8f8f8;
+}
+
+.combo-box {
+    -fx-background: transparent;
+    -fx-bacground-color: #f8f8f8, #232323;
+    -fx-border-color: #f8f8f8;
+    -fx-font-size: 16pt;
+    -fx-font-family: cs_regular;
+
+}
+
+
+.combo-box .list-cell:hover {
+    -fx-background: transparent;
+    -fx-background-color: #f8f8f8;
+    -fx-text-fill: #232323;
+}
+
+.combo-box .list-cell {
+    -fx-background: transparent;
+    -fx-background-color: #f8f8f8, #232323;
+    -fx-text-fill: #f8f8f8;
+    -fx-font-size: 16pt;
+    -fx-font-family: cs_regular;
+
+}
+
+.combo-box-popup .list-view {
+    -fx-background: transparent;
+    -fx-background-color: #f8f8f8, #232323;
+    -fx-text-fill: #f8f8f8;
+    -fx-font-size: 16pt;
+    -fx-font-family: cs_regular;
+
+}
+
+.combo-box .arrow, .combo-box .arrow-button {
+    -fx-background: transparent;
+    -fx-background-color: #f8f8f8, #232323;
+
+}
+
+.combo-box .list-cell:hover {
+    -fx-background: transparent;
+    -fx-background-color: #f8f8f8;
+    -fx-text-fill: #232323;
+
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #232323;
+}
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #f8f8f8;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #f8f8f8;
+}
